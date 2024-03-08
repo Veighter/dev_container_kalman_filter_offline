@@ -11,9 +11,9 @@ const int DATA_ROWS = 8851;
 
 struct SensorData
 {
-    double x{};
-    double y{};
-    double z{};
+    float x{};
+    float y{};
+    float z{};
 };
 
 struct IMU
@@ -46,7 +46,7 @@ int main()
     std::string delimiter{};
     std::string path_ending{};
 
-    for (IMU imu : imus)
+    for (IMU &imu : imus)
     {
         std::stringstream filepath{};
         filepath << data_IMU_path << imu.port << "/IMU_" << imu.port << "_data.txt";
@@ -75,6 +75,7 @@ int main()
                 pos = values.find(delimiter);
 
                 data = values.substr(0, pos);
+                float number = std::stof(data);
                 if (coloumn == 0)
                 {
                     imu.timeData[row] = std::stof(data);
@@ -93,15 +94,15 @@ int main()
                 }
                 if (coloumn == 4)
                 {
-                    imu.gyroData[row].x = std::stof(data);
+                    imu.gyroData[row].x = std::stof(data) * M_PI / 180.0F;
                 }
                 if (coloumn == 5)
                 {
-                    imu.gyroData[row].y = std::stof(data);
+                    imu.gyroData[row].y = std::stof(data) * M_PI / 180.0F;
                 }
                 if (coloumn == 6)
                 {
-                    imu.gyroData[row].z = std::stof(data);
+                    imu.gyroData[row].z = std::stof(data) * M_PI / 180.0F;
                 }
                 if (coloumn == 7)
                 {
