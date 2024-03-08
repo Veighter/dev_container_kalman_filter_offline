@@ -3,10 +3,11 @@
 #include <vector>
 #include <sstream>
 #include <math.h>
+#include </workspaces/dev_container_kalman_filter_offline/sensor.h>
 // 8851 Daten sind da drin vorhanden
 // In welcher Einheit sind die Sekunden angegeben? Laut Abgabe in Microsekunden
 // alle 2 sekunden kommt ein GPS rein
-
+using namespace sensorMeas;
 const int DATA_ROWS = 8851;
 
 struct SensorData
@@ -20,9 +21,9 @@ struct IMU
 {
     int port{};
     std::vector<float> timeData{std::vector<float>(DATA_ROWS)};
-    std::vector<SensorData> accData{std::vector<SensorData>(DATA_ROWS)};
-    std::vector<SensorData> gyroData{std::vector<SensorData>(DATA_ROWS)};
-    std::vector<SensorData> magData{std::vector<SensorData>(DATA_ROWS)};
+    std::vector<AccMeas> accMeas{std::vector<AccMeas>(DATA_ROWS)};
+    std::vector<GyroMeas> gyroMeas{std::vector<GyroMeas>(DATA_ROWS)};
+    std::vector<MagMeas> magMeas{std::vector<MagMeas>(DATA_ROWS)};
 } imu_1, imu_2, imu_3, imu_4;
 
 int main()
@@ -82,39 +83,39 @@ int main()
                 }
                 if (coloumn == 1)
                 {
-                    imu.accData[row].x = std::stof(data);
+                    imu.accMeas[row].x_dot_dot = std::stof(data);
                 }
                 if (coloumn == 2)
                 {
-                    imu.accData[row].y = std::stof(data);
+                    imu.accMeas[row].y_dot_dot = std::stof(data);
                 }
                 if (coloumn == 3)
                 {
-                    imu.accData[row].z = std::stof(data);
+                    imu.accMeas[row].z_dot_dot = std::stof(data);
                 }
                 if (coloumn == 4)
                 {
-                    imu.gyroData[row].x = std::stof(data) * M_PI / 180.0F;
+                    imu.gyroMeas[row].psi_dot_x = std::stof(data) * M_PI / 180.0F;
                 }
                 if (coloumn == 5)
                 {
-                    imu.gyroData[row].y = std::stof(data) * M_PI / 180.0F;
+                    imu.gyroMeas[row].psi_dot_y = std::stof(data) * M_PI / 180.0F;
                 }
                 if (coloumn == 6)
                 {
-                    imu.gyroData[row].z = std::stof(data) * M_PI / 180.0F;
+                    imu.gyroMeas[row].psi_dot_z = std::stof(data) * M_PI / 180.0F;
                 }
                 if (coloumn == 7)
                 {
-                    imu.magData[row].x = std::stof(data);
+                    imu.magMeas[row].B_x = std::stof(data);
                 }
                 if (coloumn == 8)
                 {
-                    imu.magData[row].y = std::stof(data);
+                    imu.magMeas[row].B_y = std::stof(data);
                 }
                 if (coloumn == 9)
                 {
-                    imu.magData[row].z = std::stof(data);
+                    imu.magMeas[row].B_z = std::stof(data);
                 }
                 values.erase(0, pos + delimiter.length());
                 coloumn++;
